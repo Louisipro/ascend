@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Louis Ascend Program</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:         #040404;
+  --bg-2:       #080808;
+  --bg-3:       #0c0c0c;
+  --bg-4:       #111111;
+  --gold:       #c9a84c;
+  --gold-light: #ddb85e;
+  --gold-dim:   rgba(201,168,76,0.07);
+  --border:     rgba(255,255,255,0.055);
+  --border-2:   rgba(255,255,255,0.09);
+  --border-gold: rgba(201,168,76,0.35);
+  --text:       #ddd9cf;
+  --text-mid:   #666660;
+  --text-dim:   #333330;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* ── Grain texture ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23g)' opacity='0.038'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9000;
+  mix-blend-mode: screen;
+}
+
+/* ══════════════════════════════
+   NAV
+══════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 48px;
+  border-bottom: 1px solid transparent;
+  transition: background 0.4s, border-color 0.4s, backdrop-filter 0.4s;
+}
+nav.scrolled {
+  background: rgba(4,4,4,0.94);
+  border-color: var(--border);
+  backdrop-filter: blur(14px);
+}
+.nav-logo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 17px; font-weight: 800;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--text);
+}
+.nav-logo span { color: var(--gold); }
+.nav-right { display: flex; align-items: center; gap: 32px; }
+.nav-link {
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text-mid); text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-link:hover { color: var(--text); }
+.nav-cta {
+  display: inline-flex; align-items: center;
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding: 10px 24px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.nav-cta:hover { background: var(--gold); color: var(--bg); }
+
+/* ══════════════════════════════
+   HERO
+══════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 140px 24px 100px;
+  position: relative; overflow: hidden;
+}
+
+/* Vignette */
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 38%, rgba(201,168,76,0.065) 0%, transparent 68%),
+    radial-gradient(ellipse 100% 40% at 50% 100%, rgba(0,0,0,0.7) 0%, transparent 80%);
+  pointer-events: none;
+}
+
+/* Horizontal rule at bottom */
+.hero::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent 0%, var(--border-2) 25%, var(--border-2) 75%, transparent 100%);
+}
+
+.hero-eyebrow {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 32px;
+  display: flex; align-items: center; gap: 18px;
+  position: relative; z-index: 1;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: ''; display: block;
+  width: 36px; height: 1px;
+  background: var(--gold); opacity: 0.4;
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: rgba(201,168,76,0.07);
+  border: 1px solid rgba(201,168,76,0.2);
+  padding: 9px 20px;
+  font-size: 12px; color: var(--text-mid);
+  letter-spacing: 0.06em;
+  margin-bottom: 36px;
+  position: relative; z-index: 1;
+}
+.hero-badge strong { color: var(--gold); font-weight: 700; }
+.hero-badge-dot {
+  width: 5px; height: 5px;
+  background: var(--gold); border-radius: 50%;
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+.hero h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(56px, 10.5vw, 120px);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--text);
+  max-width: 920px;
+  margin-bottom: 28px;
+  position: relative; z-index: 1;
+}
+.hero h1 span { color: var(--gold); }
+.hero h1 em {
+  font-style: italic;
+  color: rgba(221,216,207,0.35);
+}
+
+.hero-rule {
+  width: 48px; height: 2px;
+  background: var(--gold);
+  margin: 0 auto 28px;
+  position: relative; z-index: 1;
+}
+
+.hero-sub {
+  font-size: 15px; font-weight: 300;
+  color: var(--text-mid); line-height: 1.7;
+  max-width: 520px;
+  margin: 0 auto 44px;
+  position: relative; z-index: 1;
+}
+
+.btn-primary {
+  display: inline-flex; flex-direction: column; align-items: center;
+  background: var(--gold); color: var(--bg);
+  padding: 17px 44px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px; font-weight: 800;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  text-decoration: none;
+  position: relative; overflow: hidden; z-index: 1;
+  transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
+  transition: left 0.5s;
+}
+.btn-primary:hover::after { left: 100%; }
+.btn-primary:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(201,168,76,0.22);
+}
+.btn-primary span {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px; font-weight: 500;
+  letter-spacing: 0.12em; opacity: 0.65;
+  margin-top: 4px; text-transform: lowercase;
+}
+
+/* Scroll indicator */
+.scroll-cue {
+  position: absolute; bottom: 36px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  color: var(--text-dim);
+  font-size: 9px; font-weight: 600;
+  letter-spacing: 0.4em; text-transform: uppercase;
+  z-index: 1;
+}
+.scroll-line {
+  width: 1px; height: 42px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: scrollpulse 2.4s ease-in-out infinite;
+}
+@keyframes scrollpulse { 0%,100%{opacity:0.2} 50%{opacity:0.8} }
+
+/* ══════════════════════════════
+   TICKER
+══════════════════════════════ */
+.ticker {
+  background: var(--bg-3);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+  overflow: hidden; white-space: nowrap;
+}
+.ticker-inner {
+  display: inline-flex; gap: 56px;
+  animation: ticker-scroll 34s linear infinite;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--text-mid);
+}
+.ticker-inner:hover { animation-play-state: paused; }
+.ticker-dot { color: var(--gold); opacity: 0.5; }
+@keyframes ticker-scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ══════════════════════════════
+   SECTIONS — GENERAL
+══════════════════════════════ */
+.full-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+section {
+  padding: 96px 24px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 22px;
+  display: flex; align-items: center; gap: 14px;
+}
+.section-label::before {
+  content: ''; display: block;
+  width: 22px; height: 2px;
+  background: var(--gold); flex-shrink: 0;
+}
+
+h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(32px, 5vw, 58px);
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.muted {
+  color: var(--text-mid);
+  font-size: 14px; font-weight: 300;
+  line-height: 1.75;
+}
+
+/* ══════════════════════════════
+   INTRO
+══════════════════════════════ */
+.intro { display: grid; grid-template-columns: 1fr 1fr; gap: 88px; align-items: center; }
+@media(max-width:768px){ .intro { grid-template-columns: 1fr; gap: 44px; } }
+
+.intro-visual {
+  aspect-ratio: 9/16;
+  max-height: 72vh;
+  width: auto;
+  justify-self: center;
+  background: #000;
+  position: relative; overflow: hidden;
+  border: 1px solid var(--border);
+}
+.intro-visual iframe {
+  width: 100%; height: 100%;
+  border: none; display: block;
+}
+.vol-btn {
+  position: absolute; bottom: 16px; right: 16px;
+  width: 40px; height: 40px;
+  background: rgba(4,4,4,0.75);
+  border: 1px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  z-index: 10;
+  padding: 0;
+}
+.vol-btn:hover { background: rgba(201,168,76,0.18); border-color: var(--gold); }
+.vol-btn svg { width: 18px; height: 18px; fill: var(--text); pointer-events: none; }
+.play-hint { font-size: 12px; color: var(--text-mid); font-style: italic; margin-top: 14px; letter-spacing: 0.03em; }
+
+/* ══════════════════════════════
+   FEATURES
+══════════════════════════════ */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  border: 1px solid var(--border);
+  gap: 1px;
+  background: var(--border);
+}
+.feature-item {
+  padding: 32px 28px;
+  background: var(--bg-2);
+  border-top: 2px solid transparent;
+  transition: border-color 0.25s, background 0.25s;
+}
+.feature-item:hover {
+  background: var(--bg-3);
+  border-top-color: var(--gold);
+}
+.feature-bullet {
+  width: 6px; height: 6px;
+  background: var(--gold); margin-bottom: 18px;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* diamond */
+}
+.feature-item h3 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px; font-weight: 800;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.feature-item p { font-size: 13px; color: var(--text-mid); line-height: 1.65; font-weight: 300; }
+
+/* ══════════════════════════════
+   TRANSFORMATION
+══════════════════════════════ */
+.transform-section { text-align: center; }
+.transform-caption { font-size: 13px; color: var(--text-mid); margin-bottom: 44px; letter-spacing: 0.03em; }
+
+.before-after {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2px; max-width: 660px; margin: 0 auto 44px;
+}
+.ba-panel {
+  aspect-ratio: 3/4;
+  background: var(--bg-3);
+  position: relative; overflow: hidden;
+}
+.ba-panel img { width: 100%; height: 100%; object-fit: cover; }
+.ba-label {
+  position: absolute; bottom: 14px; left: 14px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase;
+  background: rgba(4,4,4,0.85); padding: 5px 11px;
+  border-left: 2px solid var(--text-dim);
+}
+.ba-panel.after .ba-label { border-left-color: var(--gold); color: var(--gold); }
+.ba-inner-label {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase;
+}
+
+/* ══════════════════════════════
+   SYSTEM PHASES
+══════════════════════════════ */
+.system-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--border); border: 1px solid var(--border); }
+@media(max-width:768px){ .system-grid { grid-template-columns: 1fr; } }
+
+.system-card {
+  background: var(--bg-2);
+  padding: 44px 32px;
+  position: relative;
+  border-top: 2px solid transparent;
+  transition: border-color 0.3s;
+}
+.system-card:hover { border-top-color: var(--gold); }
+
+.system-number {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.system-card h3 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  margin-bottom: 20px; line-height: 1.15;
+}
+.system-card ul { list-style: none; }
+.system-card ul li {
+  font-size: 13px; font-weight: 300;
+  color: var(--text-mid); line-height: 1.6;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.system-card ul li::before { content: '—'; color: var(--gold); flex-shrink: 0; opacity: 0.6; }
+
+/* ══════════════════════════════
+   COMPARISON
+══════════════════════════════ */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0; align-items: start;
+}
+@media(max-width:768px){ .comparison-grid { grid-template-columns: 1fr; } }
+
+.comp-col {
+  border: 1px solid var(--border);
+  padding: 40px 32px;
+}
+.comp-col.loser { opacity: 0.6; }
+.comp-col.winner {
+  border-color: var(--border-gold);
+  background: rgba(201,168,76,0.025);
+}
+
+.vs-divider {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px 20px;
+}
+.vs-badge {
+  background: var(--text); color: var(--bg);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px; font-weight: 900;
+  letter-spacing: 0.15em;
+  padding: 12px 16px;
+}
+
+.comp-header { margin-bottom: 28px; }
+.comp-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  background: rgba(255,255,255,0.06);
+  padding: 5px 12px; display: inline-block; margin-bottom: 14px;
+}
+.winner .comp-tag { background: rgba(201,168,76,0.15); color: var(--gold); }
+.comp-col h3 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px; font-weight: 800;
+  text-transform: uppercase; line-height: 1.1;
+}
+
+.comp-list { list-style: none; }
+.comp-list li {
+  font-size: 13px; font-weight: 300;
+  color: var(--text-mid); line-height: 1.65;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: 12px;
+}
+.comp-list li::before { content: '✕'; color: var(--text-dim); flex-shrink: 0; font-size: 11px; margin-top: 2px; }
+.winner .comp-list li::before { content: '✓'; color: var(--gold); }
+.winner .comp-list li { color: #aaa9a0; }
+
+/* ══════════════════════════════
+   CTA BLOCK
+══════════════════════════════ */
+.cta-block {
+  text-align: center;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--gold);
+  padding: 88px 40px;
+  max-width: 800px; margin: 0 auto;
+  position: relative; overflow: hidden;
+}
+.cta-block::before {
+  content: '';
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 300px; height: 200px;
+  background: radial-gradient(ellipse at top, rgba(201,168,76,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-block h2 { margin-bottom: 16px; }
+.cta-block .muted { margin-bottom: 40px; max-width: 480px; margin-left: auto; margin-right: auto; }
+
+.spots-warning {
+  display: inline-block; margin-top: 24px;
+  font-size: 11px; color: var(--text-mid);
+  letter-spacing: 0.08em;
+}
+.spots-warning strong { color: var(--text); }
+
+/* ══════════════════════════════
+   FOOTER
+══════════════════════════════ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; color: var(--text-mid);
+  flex-wrap: wrap; gap: 12px;
+  letter-spacing: 0.04em;
+}
+footer em { font-style: italic; color: var(--text-dim); }
+
+/* ══════════════════════════════
+   SCROLL REVEAL
+══════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+.d1 { transition-delay: 0.1s; }
+.d2 { transition-delay: 0.2s; }
+.d3 { transition-delay: 0.3s; }
+
+/* ══════════════════════════════
+   MOBILE
+══════════════════════════════ */
+@media(max-width:768px){
+  nav { padding: 18px 22px; }
+  .nav-link { display: none; }
+  section { padding: 72px 20px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .system-grid { gap: 2px; }
+  .comparison-grid { gap: 16px; }
+  .vs-divider { padding: 12px 0; }
+  footer { padding: 24px 20px; flex-direction: column; text-align: center; }
+  .cta-block { padding: 60px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav id="nav">
+  <div class="nav-logo"> <span>Louis Ascend Program</span></div>
+  <div class="nav-right">
+    <a href="#newsletter" class="nav-link">Canal</a>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-eyebrow">LAP — Louis Ascend Program</div>
+  <h1>L'apparence <span>avant tout</span></h1>
+  <div class="hero-rule"></div>
+  <p class="hero-sub">
+    Se contenter de ce qu'on a, c'est une forme de faiblesse. Je refuse ça. Je documente tout — sans filtre, sans limite.
+  </p>
+  <a href="#newsletter" class="btn-primary">
+    Suivre l'évolution
+    <span>accès gratuit au canal</span>
+  </a>
+  <div class="scroll-cue">
+    <div class="scroll-line"></div>
+    Découvrir
+  </div>
+</div>
+
+<!-- ══ TICKER ══ -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>LOOKSMAXXING</span><span class="ticker-dot">◆</span>
+    <span>SKINCARE</span><span class="ticker-dot">◆</span>
+    <span>MUSCULATION</span><span class="ticker-dot">◆</span>
+    <span>JAWLINE</span><span class="ticker-dot">◆</span>
+    <span>GROOMING</span><span class="ticker-dot">◆</span>
+    <span>DISCIPLINE</span><span class="ticker-dot">◆</span>
+    <span>STYLE</span><span class="ticker-dot">◆</span>
+    <span>AVANT / APRÈS</span><span class="ticker-dot">◆</span>
+    <span>LOOKSMAXXING</span><span class="ticker-dot">◆</span>
+    <span>SKINCARE</span><span class="ticker-dot">◆</span>
+    <span>MUSCULATION</span><span class="ticker-dot">◆</span>
+    <span>JAWLINE</span><span class="ticker-dot">◆</span>
+    <span>GROOMING</span><span class="ticker-dot">◆</span>
+    <span>DISCIPLINE</span><span class="ticker-dot">◆</span>
+    <span>STYLE</span><span class="ticker-dot">◆</span>
+    <span>AVANT / APRÈS</span><span class="ticker-dot">◆</span>
+  </div>
+</div>
+
+<hr class="full-divider">
+
+<!-- ══ INTRO ══ -->
+<section>
+  <div class="intro">
+    <div class="reveal">
+      <div class="section-label">La Démarche</div>
+      <h2>Je fais ce que<br>peu osent faire.</h2>
+      <p class="muted" style="margin-top:16px;">Je m'appelle Louis. Pendant trop longtemps, j'ai été invisible. Pas celui qu'on remarque, pas celui sur qui les yeux se posent. J'en ai eu assez.</p>
+      <p class="muted" style="margin-top:14px;">Je veux briller. Je veux être celui qui attire l'attention des femmes, qui provoque la jalousie, qui s'impose dans une pièce sans dire un mot. Je veux m'élever dans la société — et je sais que pour ça, l'apparence fait tout. Ce n'est pas une opinion. C'est une réalité que les gens refusent d'admettre.</p>
+      <p class="muted" style="margin-top:14px;">Se contenter de ce qu'on a, c'est choisir de rester en bas. Moi non. Je vais utiliser des techniques extrêmes, ne reculer devant rien, et documenter chaque étape — peu importe ce que ça implique.</p>
+      <p class="muted" style="margin-top:14px;">La newsletter, c'est l'accès aux coulisses : chaque méthode, chaque protocole, chaque résultat brut. De A à Z. Sans filtre, sans censure.</p>
+      <p class="play-hint" style="margin-top:26px;">↓ Cliquez play pour voir la présentation</p>
+    </div>
+    
+    <div class="reveal d1">
+      <div class="video-wrap" id="videoWrapper">
+
+        <!-- Bouton play centré (visible au chargement) -->
+        <div class="video-overlay" id="videoOverlay">
+          <div class="video-overlay-dark"></div>
+          <button class="play-big-btn" id="playBtn" aria-label="Lancer la vidéo">
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="11" stroke="#c9a84c" stroke-width="1.2"/>
+              <polygon points="9.5,7 18,12 9.5,17" fill="#c9a84c"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Vidéo locale verticale -->
+        <video
+          id="mainVideo"
+          loop
+          muted
+          playsinline
+          preload="auto"
+        >
+          <source src="ascend_trailer.mp4" type="video/mp4">
+          <source src="ascend_trailer.mp4" type="video/quicktime">
+        </video>
+
+        <!-- Bouton volume (bas droite, visible après play) -->
+        <button class="vol-btn" id="volBtn" aria-label="Couper / activer le son" style="display:none;">
+          <svg id="iconMuted" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 9v6h4l5 5V4L7 9H3z"/>
+            <line x1="23" y1="1" x2="1" y2="23" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+          <svg id="iconSound" viewBox="0 0 24 24" fill="currentColor" style="display:none;">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z"/>
+          </svg>
+        </button>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* ── Conteneur vidéo verticale ── */
+.video-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 9 / 16;
+  margin: 0 auto;
+  background: #000;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+/* Vidéo */
+#mainVideo {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* Overlay play */
+.video-overlay {
+  position: absolute; inset: 0; z-index: 3;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.35s;
+}
+.video-overlay-dark {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.5);
+}
+.play-big-btn {
+  position: relative; z-index: 4;
+  background: transparent; border: none;
+  cursor: pointer; padding: 0;
+  transition: transform 0.2s;
+}
+.play-big-btn:hover { transform: scale(1.1); }
+.play-big-btn svg { width: 72px; height: 72px; display: block; }
+
+/* Bouton volume */
+.vol-btn {
+  position: absolute; bottom: 14px; right: 14px; z-index: 5;
+  width: 38px; height: 38px;
+  background: rgba(4,4,4,0.75);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--text);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; padding: 0;
+  transition: background 0.2s, border-color 0.2s;
+}
+.vol-btn:hover { background: rgba(201,168,76,0.2); border-color: var(--gold); }
+.vol-btn svg { width: 17px; height: 17px; display: block; }
+</style>
+
+<script>
+(function () {
+  var video     = document.getElementById('mainVideo');
+  var overlay   = document.getElementById('videoOverlay');
+  var playBtn   = document.getElementById('playBtn');
+  var volBtn    = document.getElementById('volBtn');
+  var iconMuted = document.getElementById('iconMuted');
+  var iconSound = document.getElementById('iconSound');
+
+  /* ── Clic play : lance la vidéo avec son ── */
+  playBtn.addEventListener('click', function () {
+    video.muted = false;
+    video.play();
+    overlay.style.opacity = '0';
+    overlay.style.pointerEvents = 'none';
+    volBtn.style.display = 'flex';
+    iconMuted.style.display = 'none';
+    iconSound.style.display = 'block';
+  });
+
+  /* ── Toggle volume ── */
+  volBtn.addEventListener('click', function () {
+    video.muted = !video.muted;
+    iconMuted.style.display = video.muted ? 'block' : 'none';
+    iconSound.style.display = video.muted ? 'none'  : 'block';
+  });
+})();
+</script>
+
+<!-- ══ FEATURES ══ -->
+<section>
+  <div class="reveal">
+    <div class="section-label">Dans la newsletter</div>
+    <h2>Tout ce que je fais.<br>Expliqué de A à Z.</h2>
+    <p class="muted" style="margin-bottom:44px;">Abonne-toi gratuitement et accède à chaque technique, protocole et mise à jour de ma transformation en temps réel.</p>
+  </div>
+  <div class="features-grid reveal">
+    <div class="feature-item"><div class="feature-bullet"></div><h3>Routine Skincare</h3><p>Produits exacts, ordre d'application, fréquences — tout ce que j'utilise sur mon visage, sans marketing.</p></div>
+    <div class="feature-item"><div class="feature-bullet"></div><h3>Looksmaxxing Facial</h3><p>Mewing, jawline, structure osseuse — les techniques que j'applique et leurs effets documentés semaine par semaine.</p></div>
+    <div class="feature-item"><div class="feature-bullet"></div><h3>Programme Musculation</h3><p>Mon split, mes exercices, mes charges. Tout ce que je fais en salle pour remodeler mon physique.</p></div>
+    <div class="feature-item"><div class="feature-bullet"></div><h3>Nutrition &amp; Récupération</h3><p>Alimentation, sommeil, suppléments — les variables que j'optimise pour accélérer les résultats.</p></div>
+    <div class="feature-item"><div class="feature-bullet"></div><h3>Style &amp; Grooming</h3><p>Coupe de cheveux, vêtements, soins — comment l'apparence globale se construit au-delà du gym.</p></div>
+    <div class="feature-item"><div class="feature-bullet"></div><h3>Mentalité &amp; Discipline</h3><p>La structure mentale derrière la transformation. Routine quotidienne, mindset, gestion de la régularité.</p></div>
+    <div class="feature-item"><div class="feature-bullet"></div><h3>Avant / Après Réguliers</h3><p>Photos et métriques publiées à intervalles réguliers. La preuve par les faits, pas les promesses.</p></div>
+    <div class="feature-item"><div class="feature-bullet"></div><h3>Techniques Controversées</h3><p>Ce que les autres ne disent pas. Les méthodes jugées trop directes, trop honnêtes — je les explique quand même.</p></div>
+    <div class="feature-item"><div class="feature-bullet"></div><h3>Zéro Filtre</h3><p>Aucune autocensure. Ce qui fonctionne, ce qui ne fonctionne pas, les erreurs, les échecs — tout est documenté.</p></div>
+  </div>
+</section>
+
+<hr class="full-divider">
+
+<!-- ══ TRANSFORMATION ══ -->
+<section class="transform-section">
+  <div class="reveal">
+    <div class="section-label" style="justify-content:center;">La Transformation</div>
+    <h2>Le point de départ.<br>Et la destination.</h2>
+    <p class="transform-caption">Les photos avant/après sont publiées en exclusivité dans la newsletter — mises à jour régulièrement.</p>
+  </div>
+  <div class="before-after reveal">
+    <div class="ba-panel" style="background:linear-gradient(135deg,#0e0e0c 0%,#1a1a17 100%);">
+      <div class="ba-inner-label" style="color:rgba(255,255,255,0.08);">Avant</div>
+      <div class="ba-label">Avant</div>
+    </div>
+    <div class="ba-panel after" style="background:linear-gradient(135deg,#141208 0%,#201c0a 100%);">
+      <div class="ba-inner-label" style="color:rgba(201,168,76,0.18);">Après</div>
+      <div class="ba-label">Après</div>
+    </div>
+  </div>
+  <a href="#newsletter" class="btn-primary reveal" style="display:inline-flex;">
+    Voir l'évolution complète
+    <span>accès via la newsletter</span>
+  </a>
+</section>
+
+<hr class="full-divider">
+
+<!-- ══ SYSTEM ══ -->
+<section id="system">
+  <div class="reveal">
+    <div class="section-label">Les 3 Piliers</div>
+    <h2>Visage. Corps. Présence.<br>Une transformation totale.</h2>
+    <p class="muted" style="margin-bottom:44px;">La méthode LAP couvre trois dimensions de l'apparence masculine — chacune travaillée en profondeur, chacune documentée.</p>
+  </div>
+  <div class="system-grid reveal">
+    <div class="system-card">
+      <div class="system-number">Pilier 01 — Visage &amp; Skincare</div>
+      <h3>Optimiser ce que les gens voient en premier</h3>
+      <ul>
+        <li>Routine skincare complète — produits, ordre, fréquence</li>
+        <li>Looksmaxxing facial — mewing, jawline, structure</li>
+        <li>Grooming — coupe, barbe, sourcils, détails</li>
+        <li>Suivi photo hebdomadaire — métriques et observations</li>
+      </ul>
+    </div>
+    <div class="system-card">
+      <div class="system-number">Pilier 02 — Corps &amp; Physique</div>
+      <h3>Construire un physique qui impose le respect</h3>
+      <ul>
+        <li>Programme musculation — split, exercices, progression</li>
+        <li>Nutrition ciblée — macros, timing, suppléments utilisés</li>
+        <li>Récupération — sommeil, gestion du stress, protocoles</li>
+        <li>Métriques physiques — poids, mensurations, photos</li>
+      </ul>
+    </div>
+    <div class="system-card">
+      <div class="system-number">Pilier 03 — Style &amp; Mentalité</div>
+      <h3>L'apparence globale &amp; la structure intérieure</h3>
+      <ul>
+        <li>Style vestimentaire — coupes, couleurs, cohérence visuelle</li>
+        <li>Posture &amp; présence — comment le corps communique</li>
+        <li>Routine quotidienne — discipline, régularité, système</li>
+        <li>Mindset — la psychologie derrière la transformation physique</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="full-divider">
+
+<!-- ══ COMPARISON ══ -->
+<section>
+  <div class="reveal" style="text-align:center;margin-bottom:56px;">
+    <div class="section-label" style="justify-content:center;">Deux Chemins</div>
+    <h2>Accepter ce qu'on est.<br>Ou refuser de rester là.</h2>
+    <p class="muted">La majorité se contente. C'est leur choix. Ce n'est pas le mien.</p>
+  </div>
+  <div class="comparison-grid reveal">
+    <div class="comp-col loser">
+      <div class="comp-header">
+        <div class="comp-tag">Sans méthode</div>
+        <h3>Attendre,<br>Espérer, Stagner</h3>
+      </div>
+      <ul class="comp-list">
+        <li>Aucune routine skincare — la peau se dégrade sans action</li>
+        <li>Du gym sans structure — effort sans résultats visibles</li>
+        <li>Style au hasard — aucune cohérence dans l'image renvoyée</li>
+        <li>Pas de suivi — impossible de savoir ce qui fonctionne</li>
+        <li>Découragement rapide — faute de progression mesurable</li>
+        <li>Dans 1 an, tu ressembles encore à aujourd'hui.</li>
+      </ul>
+    </div>
+    <div class="vs-divider">
+      <div class="vs-badge">VS</div>
+    </div>
+    <div class="comp-col winner">
+      <div class="comp-header">
+        <div class="comp-tag">LAP</div>
+        <h3>Méthode claire,<br>Résultats visibles</h3>
+      </div>
+      <ul class="comp-list">
+        <li>Routine skincare précise — chaque produit, chaque étape, documentés</li>
+        <li>Programme musculation structuré — progression semaine par semaine</li>
+        <li>Style construit — cohérence visuelle de la tête aux pieds</li>
+        <li>Suivi avant/après — la preuve par les photos, pas les promesses</li>
+        <li>Techniques avancées — ce que personne ne dit ouvertement</li>
+        <li>Dans 1 an, tu ne te reconnais plus. Pour le mieux.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="full-divider">
+
+<!-- ══ CTA / NEWSLETTER ══ -->
+<section id="newsletter">
+  <div class="cta-block reveal">
+    <div class="section-label" style="justify-content:center;">Rejoindre</div>
+    <h2>Suis ma transformation.<br>En temps réel.</h2>
+    <p class="muted">Je vais faire ce que peu osent. Des techniques extrêmes, des méthodes que la plupart n'auraient pas le courage d'essayer — ni d'admettre. Tout sera dans la newsletter. Si tu crois que l'apparence compte, tu es à ta place ici.</p>
+    <a href="newsletter.html" class="btn-primary" style="display:inline-flex;margin-top:4px;">
+      Rejoindre le Canal
+      <span>accès gratuit — mise à jour régulière</span>
+    </a>
+    <div class="spots-warning">Chaque technique que j'applique. <strong>Expliquée de A à Z. Sans exception.</strong></div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <span>© 2026 LAP — Louis. Tous droits réservés.</span>
+  <em>L'apparence avant tout.</em>
+</footer>
+
+
+<script>
+  /* Nav scroll */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  }, { passive: true });
+
+  /* Scroll reveal */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
