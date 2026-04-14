@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La vidéo que tu cherches est ici — Louisi Ascend Program</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #040404;
+  --bg-2:     #080808;
+  --bg-3:     #0c0c0c;
+  --border:   rgba(255,255,255,0.055);
+  --border-2: rgba(255,255,255,0.09);
+  --gold:     #d9d9d9;
+  --text:     #ddd9cf;
+  --text-mid: #666660;
+  --text-dim: #333330;
+}
+
+html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23g)' opacity='0.038'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9000; mix-blend-mode: screen;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 48px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(4,4,4,0.94);
+  backdrop-filter: blur(14px);
+}
+.nav-logo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px; font-weight: 800;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--text); text-decoration: none;
+}
+.nav-logo span { color: var(--gold); }
+.nav-back {
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text-mid); text-decoration: none;
+  transition: color 0.2s;
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-back:hover { color: var(--text); }
+.nav-back::before { content: '←'; font-size: 13px; }
+
+/* ── MAIN ── */
+main {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 120px 24px 80px;
+  position: relative;
+}
+
+main::before {
+  content: '';
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(185,28,28,0.05) 0%, transparent 68%);
+  pointer-events: none;
+}
+
+main::after {
+  content: '';
+  position: absolute; bottom: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border-2), transparent);
+}
+
+/* ── CONTENU ── */
+.eyebrow {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--gold);
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 32px;
+  opacity: 0; animation: fadeUp 0.7s 0.1s forwards;
+}
+.eyebrow::before, .eyebrow::after {
+  content: ''; display: block;
+  width: 32px; height: 1px;
+  background: var(--gold); opacity: 0.4;
+}
+
+h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(36px, 7vw, 80px);
+  font-weight: 900; line-height: 1.0;
+  letter-spacing: -0.01em; text-transform: uppercase;
+  margin-bottom: 8px;
+  opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+}
+h1 span { color: #b91c1c; }
+
+.h1-sub {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(20px, 4vw, 38px);
+  font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-mid);
+  margin-bottom: 28px;
+  opacity: 0; animation: fadeUp 0.8s 0.25s forwards;
+}
+
+.rule {
+  width: 48px; height: 2px;
+  background: var(--gold);
+  margin: 0 auto 28px;
+  opacity: 0; animation: fadeUp 0.6s 0.3s forwards;
+}
+
+.subtitle {
+  max-width: 460px;
+  font-size: 14px; font-weight: 300;
+  color: var(--text-mid); line-height: 1.8;
+  margin-bottom: 16px;
+  opacity: 0; animation: fadeUp 0.7s 0.35s forwards;
+}
+
+/* Steps */
+.steps {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px;
+  margin-bottom: 48px;
+  opacity: 0; animation: fadeUp 0.7s 0.45s forwards;
+  flex-wrap: wrap;
+}
+.step {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 500;
+  color: var(--text-mid);
+  letter-spacing: 0.05em;
+}
+.step-num {
+  width: 24px; height: 24px;
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 800;
+  color: var(--text);
+  flex-shrink: 0;
+}
+.step.active .step-num {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+.step.active { color: var(--text); }
+.step-arrow { color: var(--text-dim); font-size: 10px; }
+
+/* Bouton */
+.btn-join {
+  display: inline-flex; flex-direction: column; align-items: center;
+  background: #b91c1c; color: #fff;
+  padding: 18px 56px;
+  border-radius: 6px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px; font-weight: 800;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  text-decoration: none;
+  position: relative; overflow: hidden;
+  transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+  opacity: 0; animation: fadeUp 0.7s 0.55s forwards;
+}
+.btn-join::after {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
+  transition: left 0.5s;
+}
+.btn-join:hover::after { left: 100%; }
+.btn-join:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(185,28,28,0.35);
+}
+.btn-join small {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px; font-weight: 400;
+  letter-spacing: 0.1em; opacity: 0.65;
+  margin-top: 5px; text-transform: lowercase;
+}
+
+.disclaimer {
+  margin-top: 24px;
+  font-size: 11px; color: var(--text-dim);
+  letter-spacing: 0.06em;
+  opacity: 0; animation: fadeUp 0.6s 0.7s forwards;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 24px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 11px; color: var(--text-mid);
+  letter-spacing: 0.04em;
+}
+footer em { font-style: italic; color: var(--text-dim); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  nav { padding: 18px 22px; }
+  .steps { gap: 6px; }
+  footer { padding: 20px 22px; flex-direction: column; gap: 10px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo"><span>Louisi Ascend Program</span></a>
+  <a href="index.html" class="nav-back">Retour</a>
+</nav>
+
+<!-- MAIN -->
+<main>
+  <div class="eyebrow">Tu y es presque</div>
+  <h1>La vidéo que tu <span>cherches</span></h1>
+  <p class="h1-sub">est à un clic d'ici.</p>
+  <div class="rule"></div>
+  <p class="subtitle">
+    Encore quelques secondes.<br>
+    Rejoins le canal pour y accéder — et à tout le reste.
+  </p>
+
+  <!-- Indicateur d'étapes -->
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <span>Tu trouves le lien</span>
+    </div>
+    <div class="step-arrow">›</div>
+    <div class="step active">
+      <div class="step-num">2</div>
+      <span>Tu rejoins le canal</span>
+    </div>
+    <div class="step-arrow">›</div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <span>Tu accèdes à tout</span>
+    </div>
+  </div>
+
+  <a href="https://t.me/+R6IRfPd42yplOGM8" class="btn-join" target="_blank" rel="noopener">
+    Accéder à la vidéo
+    <small>via le canal Telegram — gratuit</small>
+  </a>
+  <p class="disclaimer">La vidéo est épinglée en haut du canal dès ton arrivée.</p>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2026 Louisi Ascend Program — Louis.</span>
+  <em>L'apparence avant tout.</em>
+</footer>
+
+</body>
+</html>
